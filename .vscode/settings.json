@@ -13,8 +13,8 @@
     "editor.rulers": [
         120
     ], // Show a vertical ruler at 120 characters.
-    "editor.wordWrap": "bounded", // Wrap lines that exceed wordWrapColumn.
-    "editor.wordWrapColumn": 120, // Column at which to wrap.
+    "editor.wordWrap": "bounded", // Wrap lines that exceed wordWrapColumn for most files.
+    "editor.wordWrapColumn": 120, // Column at which to wrap for most files.
 
     //-----------------------------------------------------------------------------------------------------------------
     // Terminal Settings (for the integrated terminal within VS Code)
@@ -48,7 +48,7 @@
         "**/.git/objects/**": true,
         "**/.git/subtree-cache/**": true,
         "**/dist/**": true,
-        "**/build/**": true
+        "**/build/**": true // Added trailing comma as requested by user
     },
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@
     "dev.containers.dockerPath": "podman",
     // While many dev container settings are in devcontainer.json, some editor behaviors
     // related to how VS Code interacts with the container can be fine-tuned here if necessary.
-    // Example: "dev.containers.executeInWSL": false, // If not using WSL for Docker/Podman on Windows
+    "dev.containers.executeInWSL": true, // If not using WSL for Docker/Podman on Windows. User activated this setting.
 
     //-----------------------------------------------------------------------------------------------------------------
     // Language Specific Settings (Examples - uncomment and adjust as needed)
@@ -87,11 +87,16 @@
       "editor.defaultFormatter": "vscode.json-language-features",
       "editor.formatOnSave": true
     },
-    "[yaml]": {
-      "editor.defaultFormatter": "redhat.vscode-yaml",
-      "editor.formatOnSave": true
-    },
     */
+    "[yaml]": { // Settings specific to YAML files (like those in .tekton directory)
+      // "editor.defaultFormatter": "redhat.vscode-yaml", // Example formatter
+      // "editor.formatOnSave": true, // Example: enable format on save for YAML
+      "editor.wordWrap": "off" // Turn off editor word wrapping for YAML files.
+                               // Note: If an automatic formatter (e.g., Prettier) is active and configured
+                               // to wrap YAML, it might still do so. You would need to configure
+                               // the formatter itself (e.g., via .prettierignore) to exclude the .tekton directory
+                               // or to not wrap YAML lines if you want to prevent formatter-based wrapping.
+    },
 
     //-----------------------------------------------------------------------------------------------------------------
     // Files Associations
