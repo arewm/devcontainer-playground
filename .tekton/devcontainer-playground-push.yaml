@@ -30,8 +30,10 @@ spec:
   #   - linux/x86_64
   - name: dockerfile
     value: .devcontainer/Containerfile
+  - name: artifact-version # Added to pass dynamic version to the pipeline
+    value: '{{target_branch}}' # Uses PaC variable for the target branch name
   pipelineRef:
-    name: build-pipeline # MODIFIED from docker-build-multi-platform-oci-ta
+    name: build-pipeline
   taskRunTemplate:
     serviceAccountName: build-pipeline-devcontainer-playground
   workspaces:

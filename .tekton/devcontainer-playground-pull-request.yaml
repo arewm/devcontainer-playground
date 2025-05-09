@@ -26,14 +26,19 @@ spec:
     value: '{{revision}}'
   - name: output-image
     value: quay.io/arewm/devcontainer-playground:on-pr-{{revision}}
-  - name: image-expires-after # Value '5d' is different from pipeline default '""'. Kept.
+  - name: image-expires-after
     value: 5d
-  - name: dockerfile # Value '.devcontainer/Containerfile' is different from pipeline default 'Dockerfile'. Kept.
+  - name: dockerfile
     value: .devcontainer/Containerfile
-  - name: skip-checks # Value '"true"' is different from pipeline default '"false"'. Kept.
+  - name: skip-checks
     value: "true"
-  - name: build-image-index # Value '"false"' is different from pipeline default '"true"'. Kept.
+  - name: build-image-index
     value: "false"
+  - name: artifact-version # Added to pass dynamic version for PRs
+    # Uses PaC variable for target_branch and appends '-pr'.
+    # Alternatively, if {{target_branch}} is always 'main' for PRs,
+    # you might prefer '{{source_branch}}-pr' or 'pr-{{pull_request_number}}'.
+    value: '{{target_branch}}-pr'
   # ------------------------------------------------------------------------------------
   # The following parameters are commented out because their values in this PipelineRun
   # would be identical to the default values defined in the referenced Pipeline
@@ -59,15 +64,13 @@ spec:
   #   value: ""
   # - name: privileged-nested # Pipeline default: "false"
   #   value: "false"
-  # Note: Ensure all other required parameters from the pipeline definition that do not have defaults
-  # are explicitly provided if not injected by Konflux/Pipelines-as-Code.
 
   pipelineRef:
-    name: build-pipeline # MODIFIED from docker-build-multi-platform-oci-ta
+    name: build-pipeline
   taskRunTemplate:
     serviceAccountName: build-pipeline-devcontainer-playground
   workspaces:
-  - name: git-auth # This is an optional workspace in the Pipeline definition
+  - name: git-auth
     secret:
       secretName: '{{ git_auth_secret }}'
 status: {}

@@ -3,6 +3,7 @@
 # New name: build-pipeline
 # Content is sourced from:
 # https://raw.githubusercontent.com/konflux-ci/build-definitions/refs/heads/main/pipelines/docker-build-multi-platform-oci-ta/docker-build-multi-platform-oci-ta.yaml
+# Modified to include a generate-labels task for dynamic image labeling.
 
 apiVersion: tekton.dev/v1
 kind: Pipeline
@@ -100,6 +101,10 @@ spec:
       set of values is determined by the configuration of the multi-platform-controller.
     name: build-platforms
     type: array
+  - default: main # User added this parameter
+    description: version to use for the container image
+    name: artifact-version
+    type: string
   results:
   - description: ""
     name: IMAGE_URL
@@ -148,7 +153,7 @@ spec:
       - name: name
         value: git-clone-oci-ta
       - name: bundle
-        value: quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.1@sha256:8ecf57d5a6697ce709bee65b62781efe79a10b0c2b95e05576442b67fbd61744
+        value: quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.1@sha256:8ecf57d5a6697ce709bee65b62781efe79a10b0c2b95e05576442b67fbd61744 # Assuming 0.1 is stable, PaC might inject specific SHAs
       - name: kind
         value: task
       resolver: bundles
@@ -186,6 +191,33 @@ spec:
       workspace: git-auth
     - name: netrc
       workspace: netrc
+  - name: generate-image-labels # User modified this task
+    runAfter:
+      - clone-repository
+      - prefetch-dependencies
+    taskRef:
+      resolver: bundles
+      params:
+        - name: name
+          value: generate-labels # User changed from generate-labels-oci-ta
+        - name: bundle
+          # User changed bundle and digest
+          value: quay.io/konflux-ci/tekton-catalog/task-generate-labels-oci-ta:0.1@sha256:2eea900077190535c4dbb30e9bcc2da357bd53c408613485fb3af53484afdcbd
+        - name: kind
+          value: task
+    params: # User modified params for this task
+        - name: label-templates
+          value:
+             - "build-date=$SOURCE_DATE"
+             - "release=$SOURCE_DATE_EPOCH"
+             - "version=$(params.artifact-version)"
+        - name: source-date-epoch
+          value: "$(tasks.clone-repository.results.commit-timestamp)"
+    when:
+      - input: $(tasks.init.results.build)
+        operator: in
+        values:
+          - "true"
   - matrix:
       params:
       - name: PLATFORM
@@ -220,8 +252,11 @@ spec:
       value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
     - name: IMAGE_APPEND_PLATFORM
       value: "true"
+    - name: LABELS # User modified this from LABELS_OCI_ARTIFACT
+      value:
+      - $(tasks.generate-image-labels.results.labels[*]) # User modified this result reference
     runAfter:
-    - prefetch-dependencies
+    - generate-image-labels
     taskRef:
       params:
       - name: name
@@ -523,10 +558,14 @@ spec:
       operator: in
       values:
       - "false"
-  - name: apply-tags
+  - name: apply-tags # User modified this task
     params:
     - name: IMAGE
       value: $(tasks.build-image-index.results.IMAGE_URL)
+    - name: ADDITIONAL_TAGS # User added this
+      value:
+        - "$(params.artifact-version)"
+        - "$(params.artifact-version)-$(tasks.clone-repository.results.commit-timestamp)"
     runAfter:
     - build-image-index
     taskRef:
