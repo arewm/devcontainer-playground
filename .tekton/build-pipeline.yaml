@@ -153,7 +153,7 @@ spec:
       - name: name
         value: git-clone-oci-ta
       - name: bundle
-        value: quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.1@sha256:8ecf57d5a6697ce709bee65b62781efe79a10b0c2b95e05576442b67fbd61744 # Assuming 0.1 is stable, PaC might inject specific SHAs
+        value: quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.1@sha256:8ecf57d5a6697ce709bee65b62781efe79a10b0c2b95e05576442b67fbd61744
       - name: kind
         value: task
       resolver: bundles
@@ -202,7 +202,7 @@ spec:
           value: generate-labels # User changed from generate-labels-oci-ta
         - name: bundle
           # User changed bundle and digest
-          value: quay.io/konflux-ci/tekton-catalog/task-generate-labels-oci-ta:0.1@sha256:2eea900077190535c4dbb30e9bcc2da357bd53c408613485fb3af53484afdcbd
+          value: quay.io/konflux-ci/tekton-catalog/task-generate-labels:0.1@sha256:2eea900077190535c4dbb30e9bcc2da357bd53c408613485fb3af53484afdcbd
         - name: kind
           value: task
     params: # User modified params for this task
@@ -256,7 +256,7 @@ spec:
       value:
       - $(tasks.generate-image-labels.results.labels[*]) # User modified this result reference
     runAfter:
-    - generate-image-labels
+    - generate-image-labels # MODIFIED: ensure labels are generated first
     taskRef:
       params:
       - name: name
