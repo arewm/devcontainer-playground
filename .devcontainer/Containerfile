@@ -1,0 +1,54 @@
+# .devcontainer/Containerfile
+# You can specify the Fedora version as a build argument
+ARG FEDORA_VERSION=latest
+FROM fedora:${FEDORA_VERSION}
+
+# [Optional] Set a non-root user.
+# The Dev Containers extension and common-utils feature often handle user creation.
+# If you want to manually define a user:
+# ARG USERNAME=vscode
+# ARG USER_UID=1000
+# ARG USER_GID=${USER_UID}
+# RUN groupadd --gid ${USER_GID} ${USERNAME} \
+#    && useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
+#    && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
+#    && chmod 0440 /etc/sudoers.d/${USERNAME}
+
+# [Optional] Install system-wide dependencies or tools
+# Update packages and install some basic tools.
+# The 'common-utils' feature in devcontainer.json also handles package upgrades.
+# If you are not using that feature, or need more specific control, uncomment the following:
+# RUN dnf update -y && \
+#    dnf install -y \
+#    git \
+#    procps-ng \
+#    iputils \
+#    sudo \
+#    # Add any other essential packages your Fedora environment needs
+#    # For example:
+#    # make \
+#    # gcc \
+#    # python3-devel \
+#    # java-17-openjdk-devel \
+#    && dnf clean all
+
+# [Optional] Add custom setup scripts or copy configuration files
+# COPY my-custom-script.sh /tmp/my-custom-script.sh
+# RUN bash /tmp/my-custom-script.sh
+
+# [Optional] Set environment variables
+# ENV MY_VARIABLE=my_value
+
+# If you manually created a user, switch to that user
+# USER ${USERNAME}
+
+# Keep the container alive (if not using a command that keeps it running)
+# This is often not needed if VS Code manages the container lifecycle or if
+# your devcontainer.json has a command that keeps it running.
+# CMD [ "sleep", "infinity" ]
+
+# Note: Many common setup tasks (like creating a non-root user, installing git, zsh)
+# can be handled by "features" in the devcontainer.json, which can be cleaner
+# than managing them directly in the Containerfile.
+# Use this Containerfile for more complex or Fedora-specific customizations
+# that aren't covered by existing devcontainer features.

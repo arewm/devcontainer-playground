@@ -1,0 +1,105 @@
+{
+    //-----------------------------------------------------------------------------------------------------------------
+    // General Editor Settings
+    //-----------------------------------------------------------------------------------------------------------------
+    "files.eol": "\n", // Ensure consistent line endings (LF) across platforms, suitable for Linux containers.
+    "editor.tabSize": 4, // Default tab size to 4 spaces.
+    "editor.insertSpaces": true, // Insert spaces when tab is pressed.
+    "editor.detectIndentation": false, // Override auto-detection of indentation to enforce project style.
+    "files.trimTrailingWhitespace": true, // Remove trailing whitespace on save.
+    "files.insertFinalNewline": true, // Ensure a final newline at the end of files on save.
+
+    // Line length and wrapping configurations
+    "editor.rulers": [
+        120
+    ], // Show a vertical ruler at 120 characters.
+    "editor.wordWrap": "bounded", // Wrap lines that exceed wordWrapColumn.
+    "editor.wordWrapColumn": 120, // Column at which to wrap.
+
+    //-----------------------------------------------------------------------------------------------------------------
+    // Terminal Settings (for the integrated terminal within VS Code)
+    //-----------------------------------------------------------------------------------------------------------------
+    // The default shell for Linux is often set in devcontainer.json under customizations.vscode.settings,
+    // but you can also specify it here if needed, though devcontainer.json takes precedence when in the container.
+    // Example: "terminal.integrated.defaultProfile.linux": "zsh",
+    // Example: "terminal.integrated.profiles.linux": {
+    //   "zsh": {
+    //     "path": "/bin/zsh"
+    //   },
+    //   "bash": {
+    //     "path": "/bin/bash"
+    //   }
+    // },
+
+    //-----------------------------------------------------------------------------------------------------------------
+    // Search Settings
+    //-----------------------------------------------------------------------------------------------------------------
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/tmp": true,
+        "**/dist": true,
+        "**/build": true
+    },
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/dist/**": true,
+        "**/build/**": true
+    },
+
+    //-----------------------------------------------------------------------------------------------------------------
+    // Dev Container Specific Settings
+    //-----------------------------------------------------------------------------------------------------------------
+    // Specify Podman as the preferred container runtime for the Dev Containers extension.
+    "dev.containers.dockerPath": "podman",
+    // While many dev container settings are in devcontainer.json, some editor behaviors
+    // related to how VS Code interacts with the container can be fine-tuned here if necessary.
+    // Example: "dev.containers.executeInWSL": false, // If not using WSL for Docker/Podman on Windows
+
+    //-----------------------------------------------------------------------------------------------------------------
+    // Language Specific Settings (Examples - uncomment and adjust as needed)
+    //-----------------------------------------------------------------------------------------------------------------
+    /*
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      }
+    },
+    */
+    "[markdown]": {
+        "editor.wordWrap": "on", // Keep word wrap on for Markdown for readability
+        "files.trimTrailingWhitespace": false // Often desirable to keep trailing spaces in Markdown
+        // You might also want to set a specific word wrap column for markdown if different from the general one
+        // "editor.wordWrapColumn": 80
+    },
+    /*
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features",
+      "editor.formatOnSave": true
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "vscode.json-language-features",
+      "editor.formatOnSave": true
+    },
+    "[yaml]": {
+      "editor.defaultFormatter": "redhat.vscode-yaml",
+      "editor.formatOnSave": true
+    },
+    */
+
+    //-----------------------------------------------------------------------------------------------------------------
+    // Files Associations
+    //-----------------------------------------------------------------------------------------------------------------
+    // Ensure Containerfile is recognized as Dockerfile syntax if not already.
+    // This helps with syntax highlighting and language features for Containerfiles.
+    "files.associations": {
+        "Containerfile": "dockerfile",
+        "Containerfile.*": "dockerfile" // Catches variants like Containerfile.prod, Containerfile.dev
+    }
+}

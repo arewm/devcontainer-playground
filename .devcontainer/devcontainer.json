@@ -1,0 +1,74 @@
+// .devcontainer/devcontainer.json
+{
+    "name": "Fedora (Latest) Dev Container",
+
+    // Option 1: Use a pre-built Fedora image directly
+    // "image": "fedora:latest",
+
+    // Option 2: Build from a Containerfile for more control
+    "build": {
+        "dockerfile": "Containerfile" // Changed from Dockerfile to Containerfile
+        // You can add build arguments here if your Containerfile uses them
+        // "args": { "FEDORA_VERSION": "latest" }
+    },
+
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    // Installs common utilities like git, zsh, Oh My Zsh, etc.
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "upgradePackages": true // Runs dnf upgrade
+        },
+        // Example: Add Docker-in-Docker if you need to run Docker commands from within the dev container
+        // "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+        // Example: Add specific language support like Node.js
+        // "ghcr.io/devcontainers/features/node:1": {
+        //  "version": "lts"
+        // }
+    },
+
+    // Configure tool-specific properties.
+    "customizations": {
+        // Configure properties specific to VS Code.
+        "vscode": {
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "ms-vscode.makefile", // Example: If you work with Makefiles
+                "GitHub.copilot",      // Example: If you use GitHub Copilot
+                "ms-azuretools.vscode-docker" // Useful for managing Docker from within VS Code
+                // Add any Fedora/Linux specific extensions you find useful
+            ],
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/zsh", // Or /bin/bash if you don't install zsh
+                "files.eol": "\n" // Ensure Linux line endings
+            }
+        }
+    },
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [3000, 8080],
+
+    // Use 'postCreateCommand' to run commands after the container is created.
+    // Useful for installing project dependencies or specific tools not covered by features.
+    "postCreateCommand": "echo 'Container created!' && sudo dnf install -y neofetch htop && echo 'Fedora tools (neofetch, htop) installed.'",
+    // Example for a Python project:
+    // "postCreateCommand": "pip install -r requirements.txt",
+
+    // Use 'postStartCommand' to run commands every time the container starts.
+    // "postStartCommand": "echo 'Container started!'",
+
+    // Use 'postAttachCommand' to run commands every time VS Code attaches to the container.
+    // "postAttachCommand": "echo 'VS Code attached!'",
+
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    // "remoteUser": "root"
+
+    // By default, your local user's UID/GID are used to create a non-root user in the container.
+    // This helps with file permissions.
+    // If you need to run as root for extensive setup, you can set "remoteUser": "root"
+    // but it's generally recommended to use a non-root user for day-to-day development.
+    // The common-utils feature often creates a 'vscode' user or similar.
+    "remoteUser": "vscode" // This user is typically created by the common-utils feature
+}
